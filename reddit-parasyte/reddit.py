@@ -1,9 +1,10 @@
 import requests
 import random
+import utils
 
 class Reddit():
 
-  def __init__(self, subreddit, page_sort="top", num_posts=None):
+  def __init__(self, subreddit, content, page_sort="top", num_posts=None):
     self.subreddit = subreddit
     self.reddit_url = f"https://www.reddit.com/r/{subreddit}/{page_sort}.json"
     
@@ -19,23 +20,12 @@ class Reddit():
     except Exception as err:
       print(f"Error: {err}")
 
-    self.posts = [child["data"] for child in data["children"]]
+    uncleaned_data = [child["data"] for child in data["children"]]
 
-
-  def refine_story_posts(self):
-    required_fields = (
-      "subreddit", "title", "subreddit_name_prefixed", "upvote_ratio", "ups", "over_18", "spoiler", "id", "is_robot_indexable", "author", "num_comments", "permalink", "url", "subreddit_subscribers", "created_utc", "num_crossposts", "media", "is_video"
-    )
-    refined_posts = list()
-
-    for post in self.posts:
-      new_post = dict()
-      for key, val in post.items():
-        if (key in required_fields):
-          new_post[key] = val
-      refined_posts.append(new_post)
-
-    self.posts = refined_posts
+    if content == "story":
+      self.posts = utils.clean_data(uncleaned_data, utils.story_required_fields)
+    else:
+      self.posts = uncleaned_data
 
 
   def get_all_posts(self):
@@ -64,7 +54,7 @@ class Reddit():
       # Cleaning the data:
       data = [dt["data"] for dt in res.json()[1]["data"]["children"][:-1]]
       print(data[0])
-      
+
     except Exception as err:
       print(f"Error: {err}")
 

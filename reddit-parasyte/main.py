@@ -41,4 +41,4 @@ def get_reddit_videos(subreddit="TikTokCringe", page_sort="top", post_limit=10):
 if __name__ == "__main__":
   # print(get_reddit_videos())
   print("who?")
-  Reddit()
+  Reddit().refine_story_post()

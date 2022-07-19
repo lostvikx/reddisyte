@@ -4,18 +4,18 @@ from reddit import Reddit
 
 
 def main():
-  # Story: Post title + Top comments (no media)
+  # story: post title + top comments (no media)
   reddit = Reddit(subreddit="AskReddit", content="story", num_posts=10)
-  # reddit.refine_story_posts()
   all_posts = reddit.get_all_posts()
 
-  # Test: display post titles
-  for post in all_posts:
-    print(post["title"])
+  # display post titles
+  # for post in all_posts:
+  #   print(post["title"])
 
   rand_story = reddit.get_random_story_post()
-  # print(rand_story)
-  reddit.extract_comments(rand_story)
+  print(rand_story["title"])
+  comments = reddit.extract_comments(rand_story)
+  print(comments[2]["body"], comments[2]["reply"], sep="\n")
 
 
 if __name__ == "__main__":

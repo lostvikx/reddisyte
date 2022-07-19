@@ -18,7 +18,7 @@ class Reddit():
       res.raise_for_status()
       data = res.json()["data"]
     except Exception as err:
-      print(f"Error: {err}")
+      print(f"HTTP Error: {err}")
 
     uncleaned_data = [child["data"] for child in data["children"]]
 
@@ -52,9 +52,22 @@ class Reddit():
       res.raise_for_status()
 
       # Cleaning the data:
-      data = [dt["data"] for dt in res.json()[1]["data"]["children"][:-1]]
-      print(data[0])
+      uncleaned_data = [dt["data"] for dt in res.json()[1]["data"]["children"][:-1]]
+      # TEST: first 20 comments
+      comments = utils.clean_data(uncleaned_data, utils.comment_required_fields)[:20]
 
+      for post in comments:
+        try:
+          post["reply"] = post["replies"]["data"]["children"][0]["data"]["body"]
+        except Exception as err:
+          # No reply
+          post["reply"] = "NA"
+
+        del post["replies"]
+
+      # print(data)
     except Exception as err:
-      print(f"Error: {err}")
+      print(f"HTTP Error: {err}")
+
+    return comments
 

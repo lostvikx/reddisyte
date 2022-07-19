@@ -21,5 +21,9 @@ def clean_data(data:list, required_fields:iter) -> list:
   return refined_data
 
 story_required_fields = (
-  "subreddit", "title", "subreddit_name_prefixed", "upvote_ratio", "ups", "over_18", "spoiler", "id", "is_robot_indexable", "author", "num_comments", "permalink", "url", "subreddit_subscribers", "created_utc", "num_crossposts", "media", "is_video"
+  "subreddit", "title", "upvote_ratio", "ups", "over_18", "spoiler", "id", "is_robot_indexable", "author", "num_comments", "url", "created_utc", "media", "is_video"
+)
+
+comment_required_fields = (
+  "subreddit", "replies", "id", "author", "body", "ups"
 )

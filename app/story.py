@@ -1,4 +1,5 @@
-# For later use
+# For later use, to extract videos
+
 import requests
 import re
 

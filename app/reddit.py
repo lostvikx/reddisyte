@@ -26,7 +26,7 @@ class Reddit():
     self.subreddit = subreddit
     self.reddit_url = f"https://www.reddit.com/r/{subreddit}/{page_sort}.json"
     
-    if not num_posts is None:
+    if num_posts:
       self.reddit_url += f"?limit={num_posts}"
 
     self.req_headers = {"user-agent": "Linux Machine (Vikram Singh Negi)"}
@@ -38,7 +38,8 @@ class Reddit():
     except Exception as err:
       print(f"HTTP Error: {err}")
 
-    uncleaned_data = [child["data"] for child in data["children"]]
+    uncleaned_data = utils.filter_data([child["data"] for child in data["children"]], "title")
+    print(f"Posts: {len(uncleaned_data)}")
 
     if content == "story":
       self.posts = utils.clean_data(uncleaned_data, utils.story_required_fields)
@@ -78,14 +79,14 @@ class Reddit():
     """
     # Sorts the comments by Best
     comments_api_endpoint = f"https://www.reddit.com/r/{self.subreddit}/comments/{post['id']}.json"
-    print(comments_api_endpoint)
+    print(f"Fetching: {comments_api_endpoint}")
 
     res = requests.get(comments_api_endpoint, headers=self.req_headers)
     try:
       res.raise_for_status()
 
       # Cleaning the data:
-      uncleaned_data = [dt["data"] for dt in res.json()[1]["data"]["children"][:-1]]
+      uncleaned_data = utils.filter_data([dt["data"] for dt in res.json()[1]["data"]["children"][:-1]], "body")
       # TEST: first 20 comments
       comments = utils.clean_data(uncleaned_data, utils.comment_required_fields)[:num_comments]
 
@@ -102,8 +103,12 @@ class Reddit():
     except Exception as err:
       print(f"HTTP Error: {err}")
 
-    return comments
+    print(f"Comments: {len(comments)}")
+
+    return self.sort_comments(comments)
 
 
   # TODO: Sort comments by most ["ups"]
+  def sort_comments(self, comments:list)->list:
+    return sorted(comments, key=lambda post: post["ups"], reverse=True)
 

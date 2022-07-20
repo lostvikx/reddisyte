@@ -1,4 +1,4 @@
-def clean_data(data:list, required_fields:iter) -> list:
+def clean_data(data:iter, required_fields:iter) -> list:
   """
   Returns the list with its dict elements having only the required fields.
 
@@ -27,3 +27,15 @@ story_required_fields = (
 comment_required_fields = (
   "subreddit", "replies", "id", "author", "body", "ups"
 )
+
+def filter_data(data:iter, data_kind, length=100):
+  """
+  Filter out long data.
+  """
+  # data_kind := title or comment
+  filtered_data = []
+  for d in data:
+    if len(d[data_kind]) <= length:
+      filtered_data.append(d)
+
+  return filtered_data

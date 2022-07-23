@@ -35,3 +35,22 @@ def get_reddit_videos(subreddit="TikTokCringe", page_sort="top", post_limit=10):
       dt.append(child_data)
 
   return dt, len(dt)
+
+    # for post in comments:
+      #   # reply = post["replies"]["data"]["children"][0]["data"]["body"]
+      #   try:
+      #     n_reply = 0
+      #     while True:
+      #       reply = post["replies"]["data"]["children"][n_reply]["data"]["body"]
+      #       if len(reply) <= 200:
+      #         break
+      #       else:
+      #         # print(f"Removed reply: {reply}")
+      #         n_reply += 1
+      #         continue
+      #     post["reply"] = reply
+      #   except Exception as err:
+      #     # No reply
+      #     post["reply"] = "NA"
+
+      #   del post["replies"]

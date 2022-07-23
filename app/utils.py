@@ -24,11 +24,12 @@ story_required_fields = (
   "subreddit", "title", "upvote_ratio", "ups", "over_18", "spoiler", "id", "is_robot_indexable", "author", "num_comments", "url", "created_utc", "media", "is_video"
 )
 
+# No replies
 comment_required_fields = (
-  "subreddit", "replies", "id", "author", "body", "ups"
+  "subreddit", "id", "author", "body", "ups"
 )
 
-def filter_data(data:iter, data_kind, length=100):
+def filter_data(data:iter, data_kind, length=300):
   """
   Filter out long data.
   """

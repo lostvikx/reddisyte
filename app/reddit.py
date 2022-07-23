@@ -24,6 +24,7 @@ class Reddit():
       num_posts=None (int):Number of posts
     """
     self.subreddit = subreddit
+    print(f"Subreddit: {self.subreddit}")
     self.reddit_url = f"https://www.reddit.com/r/{subreddit}/{page_sort}.json"
     
     if num_posts:
@@ -38,6 +39,7 @@ class Reddit():
     except Exception as err:
       print(f"HTTP Error: {err}")
 
+    # Post title length < 100 chars
     uncleaned_data = utils.filter_data([child["data"] for child in data["children"]], "title")
     print(f"Posts: {len(uncleaned_data)}")
 
@@ -86,23 +88,15 @@ class Reddit():
       res.raise_for_status()
 
       # Cleaning the data:
+      # Comment length < 100 chars
       uncleaned_data = utils.filter_data([dt["data"] for dt in res.json()[1]["data"]["children"][:-1]], "body")
       # TEST: first 20 comments
       comments = utils.clean_data(uncleaned_data, utils.comment_required_fields)[:num_comments]
 
-      for post in comments:
-        try:
-          post["reply"] = post["replies"]["data"]["children"][0]["data"]["body"]
-        except Exception as err:
-          # No reply
-          post["reply"] = "NA"
-
-        del post["replies"]
-
-      # print(data)
     except Exception as err:
       print(f"HTTP Error: {err}")
 
+    # comments = [post.pop("replies", None) for post in comments]
     print(f"Comments: {len(comments)}")
 
     return self.sort_comments(comments)

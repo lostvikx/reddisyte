@@ -39,7 +39,7 @@ class Reddit():
     except Exception as err:
       print(f"HTTP Error: {err}")
 
-    # Post title length < 100 chars
+    # Post title length < 300 chars
     uncleaned_data = utils.filter_data([child["data"] for child in data["children"]], "title")
     print(f"Posts: {len(uncleaned_data)}")
 
@@ -53,7 +53,8 @@ class Reddit():
     """
     Return all posts.
     """
-    return self.posts.copy()
+    # return self.posts.copy()
+    return [post for post in self.posts if post["media"] is None]
 
 
   def get_random_story_post(self) -> dict:

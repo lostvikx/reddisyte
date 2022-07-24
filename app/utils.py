@@ -21,7 +21,7 @@ def clean_data(data:iter, required_fields:iter) -> list:
   return refined_data
 
 story_required_fields = (
-  "subreddit", "title", "upvote_ratio", "ups", "over_18", "spoiler", "id", "is_robot_indexable", "author", "num_comments", "url", "created_utc", "media", "is_video"
+  "title", "ups", "over_18", "spoiler", "id", "author", "url", "media", "is_video"
 )
 
 # No replies
@@ -40,3 +40,9 @@ def filter_data(data:iter, data_kind, length=300):
       filtered_data.append(d)
 
   return filtered_data
+
+def clean_text(text):
+  pass
+
+# def get_file_realpath(file):
+#   return os.path.dirname(os.path.realpath(file))

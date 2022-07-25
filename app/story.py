@@ -2,6 +2,11 @@
 
 import requests
 import re
+# from bs4 import BeautifulSoup
+
+# soup = BeautifulSoup(html)
+# text = soup.get_text()
+# print(text)
 
 def get_reddit_videos(subreddit="TikTokCringe", page_sort="top", post_limit=10):
   reddit_tiktok_url = f"https://www.reddit.com/r/{subreddit}/{page_sort}.json?limit={post_limit}"

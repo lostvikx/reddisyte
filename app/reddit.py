@@ -44,17 +44,30 @@ class Reddit():
     print(f"Posts: {len(uncleaned_data)}")
 
     if content == "story":
-      self.posts = utils.clean_data(uncleaned_data, utils.story_required_fields)
+      self.posts = utils.clean_data(uncleaned_data, utils.post_required_fields)
     else:
+      # TODO: content == "video"
       self.posts = uncleaned_data
 
 
-  def get_all_posts(self) -> list:
+  def get_all_posts(self, no_media=True) -> list:
     """
     Return all posts.
     """
-    # return self.posts.copy()
-    return [post for post in self.posts if post["media"] is None]
+    if no_media:
+      return [post for post in self.posts if post["media"] is None]
+    else:
+      return self.posts.copy()
+
+
+  def display_all_posts_title(self):
+    """
+    Prints out title of each post.
+    """
+    count = 0
+    for post in self.posts:
+      print(f"{count}. {post['title']}")
+      count += 1
 
 
   def get_random_story_post(self) -> dict:
@@ -89,7 +102,7 @@ class Reddit():
       res.raise_for_status()
 
       # Cleaning the data:
-      # Comment length < 100 chars
+      # Comment length < 300 chars
       uncleaned_data = utils.filter_data([dt["data"] for dt in res.json()[1]["data"]["children"][:-1]], "body")
       # TEST: first 20 comments
       comments = utils.clean_data(uncleaned_data, utils.comment_required_fields)[:num_comments]

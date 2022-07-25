@@ -15,7 +15,7 @@ playwright install
 ## TODO
 
 - [ ] Refine comments: remove html tags
-- [*] Google TTS API
+- [x] Google TTS API
 - [ ] Use playwright package, instead of selenium
 - [ ] Create a setup file at root dir
 

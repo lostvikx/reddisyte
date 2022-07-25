@@ -1,13 +1,25 @@
 #!/usr/bin/env python3
 
+import asyncio
+
+from playwright.async_api import async_playwright
 from reddit import Reddit
 from GoogleTTS.tts import GoogleTTS
+from Playwright.screenshot import Playwright
 
 # TODO: Only titles (no comments) --only-titles
 # NOTE: subreddits = ["Showerthoughts", "AskReddit"]
 
-# def prepare_text_for_tts(*text):
-#   print(for )
+
+async def run_playwright(url:str, is_nsfw, div_ids:list):
+  async with async_playwright() as p:
+    browser = await p.chromium.launch(headless=True)
+    page = await browser.new_page()
+
+    play = Playwright(page)
+    await play.navigate(url)
+    await play.save_screenshots(div_ids, is_nsfw)
+    await browser.close()
 
 
 def main():
@@ -25,10 +37,15 @@ def main():
   comments = reddit.extract_comments(post=post_selected,num_comments=20)
 
   # Prepare for TTS
-  text_list: list = [post_selected["title"].strip()] + [com["body"].strip() for com in comments]
-  # Google TTS API
-  GoogleTTS(text=text_list)
+  text_list = [post_selected["title"].strip()]
+  div_ids_list= [post_selected["name"]]
+  for com in comments:
+    text_list.append(com["body"].strip())
+    div_ids_list.append(com["name"])
 
+  # GoogleTTS(text=text_list)
+  # NOTE: sum(audio_clips) <= 55 seconds
+  asyncio.run(run_playwright(post_selected["url"], post_selected["over_18"], div_ids_list[:2]))
 
 if __name__ == "__main__":
   main()

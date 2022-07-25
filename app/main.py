@@ -25,21 +25,9 @@ def main():
   comments = reddit.extract_comments(post=post_selected,num_comments=20)
 
   # Prepare for TTS
-  text = [post_selected["title"].strip()] + [com["body"].strip() for com in comments]
-
-  # text = post_selected["title"] + "\n\n"
-  # count_comments = 0
-  # for com in comments:
-  #   # Max text length == 1000
-  #   if len(text) < 1000:
-  #     text += (com["body"].strip() + "\n")
-  #     count_comments += 1
-
-  # text = text.strip()
-  # print(text)
-  # print(f"Total text length: {len(text)} characters")
-  # print(f"Comments used: {count_comments}")
-  # GoogleTTS(text)
+  text_list: list = [post_selected["title"].strip()] + [com["body"].strip() for com in comments]
+  # Google TTS API
+  GoogleTTS(text=text_list)
 
 
 if __name__ == "__main__":

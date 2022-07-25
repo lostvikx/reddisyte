@@ -25,12 +25,11 @@ class Reddit():
     """
     self.subreddit = subreddit
     print(f"Subreddit: {self.subreddit}")
+    self.req_headers = {"user-agent": "Linux Machine (Reddisyte)"}
     self.reddit_url = f"https://www.reddit.com/r/{subreddit}/{page_sort}.json"
     
     if num_posts:
       self.reddit_url += f"?limit={num_posts}"
-
-    self.req_headers = {"user-agent": "Linux Machine (Vikram Singh Negi)"}
 
     res = requests.get(self.reddit_url, headers=self.req_headers)
     try:
@@ -66,7 +65,14 @@ class Reddit():
     """
     count = 0
     for post in self.posts:
-      print(f"{count}. {post['title']}")
+      post_title = f"{count}. "
+      if post["over_18"]:
+        post_title += "[NSFW] "
+      if post["spoiler"]:
+        post_title += "[SPOILER] "
+
+      post_title += post['title']
+      print(post_title)
       count += 1
 
 

@@ -20,9 +20,9 @@ def clean_data(data:iter, required_fields:iter) -> list:
 
   return refined_data
 
-post_required_fields = ("title", "ups", "over_18", "spoiler", "id", "url", "media", "is_video")
+post_required_fields = ("title", "ups", "over_18", "spoiler", "name", "url", "media", "is_video", "id")
 # Don't extract replies
-comment_required_fields = ("id", "author", "body", "ups")
+comment_required_fields = ("name", "author", "body", "ups")
 
 def filter_data(data:list, data_kind, length=300):
   """

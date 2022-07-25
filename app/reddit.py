@@ -100,10 +100,10 @@ class Reddit():
       Returns a list of comments.
     """
     # Sorts the comments by Best
-    comments_api_endpoint = f"https://www.reddit.com/r/{self.subreddit}/comments/{post['id']}.json"
-    print(f"Fetching: {comments_api_endpoint}")
+    comments_uri = f"https://www.reddit.com/r/{self.subreddit}/comments/{post['id']}.json"
+    print(f"Fetching: {comments_uri}")
 
-    res = requests.get(comments_api_endpoint, headers=self.req_headers)
+    res = requests.get(comments_uri, headers=self.req_headers)
     try:
       res.raise_for_status()
 

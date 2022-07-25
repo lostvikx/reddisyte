@@ -9,27 +9,22 @@ def clean_data(data:iter, required_fields:iter) -> list:
   Returns:
     refined_data: list
   """
-  refined_data = list()
+  refined_data = []
 
   for d in data:
-      new_data = dict()
-      for key, val in d.items():
-        if (key in required_fields):
-          new_data[key] = val
-      refined_data.append(new_data)
+    new_data = dict()
+    for key, val in d.items():
+      if (key in required_fields):
+        new_data[key] = val
+    refined_data.append(new_data)
 
   return refined_data
 
-story_required_fields = (
-  "title", "ups", "over_18", "spoiler", "id", "author", "url", "media", "is_video"
-)
+post_required_fields = ("title", "ups", "over_18", "spoiler", "id", "url", "media", "is_video")
+# Don't extract replies
+comment_required_fields = ("id", "author", "body", "ups")
 
-# No replies
-comment_required_fields = (
-  "subreddit", "id", "author", "body", "ups"
-)
-
-def filter_data(data:iter, data_kind, length=300):
+def filter_data(data:list, data_kind, length=300):
   """
   Filter out long data.
   """

@@ -1,3 +1,5 @@
 requests
 google-cloud-texttospeech
 playwright
+moviepy
+ffmpeg-python

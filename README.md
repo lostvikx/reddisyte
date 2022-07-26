@@ -3,6 +3,7 @@ Basically steal content from Reddit and post it as shorts on YouTube and earn fr
 
 ## Usage
 ```bash
+sudo apt install ffmpeg
 pip install -r requirements.txt
 playwright install
 ```

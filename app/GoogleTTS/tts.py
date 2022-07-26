@@ -1,21 +1,27 @@
 import os
+import ffmpeg
 from google.cloud import texttospeech
 
-# NOTE: Not asynchronous
 
 class GoogleTTS():
 
-  def __init__(self, text:list, lang="en-US"):
+  def __init__(self, text:list, lang="en-US", limit_duration=30):
     # Get realpath of this file
     self.dir_path = os.path.dirname(os.path.realpath(__file__))
     # Set env variable
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = f"{self.dir_path}/creds/service-account-file.json"
 
     self.text = text
-    self.total_char_count = sum([len(t) for t in self.text])
+    self.total_duration = float(0)
+    clip_count = 0
 
     print("Saving audio files...")
+
     for idx, t in enumerate(self.text):
+      if self.total_duration >= limit_duration:
+        print(f"break: got {clip_count} clips")
+        break
+
       client = texttospeech.TextToSpeechClient()
       synthesis_input = texttospeech.SynthesisInput(text=t)
 
@@ -32,11 +38,17 @@ class GoogleTTS():
         voice=voice,
         audio_config=audio_config
       )
+      audio_file_name = f"audio_{idx}"
+      self.save_audio_file(res_binary=res.audio_content, file_name=audio_file_name)
+      clip_count += 1
 
-      self.save_audio_file(res_binary=res.audio_content, file_name=f"audio_{idx}")
+      # Note: (duration_ts or frames) / sample_rate == duration
+      self.total_duration += float(ffmpeg.probe(f"{self.dir_path}/temp/{audio_file_name}.opus")["format"]["duration"])
 
-    print("Audio files saved")
-    self.save_char_count()
+    print(f"Total Duration: {self.total_duration}")
+    self.text = self.text[:clip_count]
+    total_char_count = sum([len(t) for t in self.text])
+    self.save_char_count(total_char_count)
 
 
   def save_audio_file(self, res_binary, file_name):
@@ -46,13 +58,17 @@ class GoogleTTS():
       audio_file.write(res_binary)
 
 
-  def save_char_count(self):
+  def save_char_count(self, count):
     with open(f"{self.dir_path}/char_count.txt", "r") as f:
       t_letter_count = int(f.read())
-      t_letter_count += self.total_char_count
+      t_letter_count += count
       
     with open(f"{self.dir_path}/char_count.txt", "w") as f:
       f.write(str(t_letter_count))
 
     print(f"{1_000_000 - t_letter_count} chars before billing!")
+
+
+  def get_text_list(self):
+    return self.text.copy()
 

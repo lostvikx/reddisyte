@@ -31,6 +31,7 @@ def main():
 
   # Select a post
   post_num = int(input("Post Number: "))
+  # TODO: Add error handling
   post_selected = all_posts[post_num]
 
   # Top 20 comments of a particular post
@@ -44,13 +45,13 @@ def main():
     text_list.append(com["body"].strip())
     div_ids_list.append(com["name"])
 
-  # NOTE: sum(audio_clips) <= 50 seconds
-  text_list = GoogleTTS(text=text_list).get_text_list()
-  div_ids_list = div_ids_list[:len(text_list)]
+  # NOTE: sum(audio_clips) <= 40 seconds
+  # text_list = GoogleTTS(text=text_list[:3]).get_text_list()
+  # div_ids_list = div_ids_list[:len(text_list)]
 
   # print(text_list)
   # TEST
-  asyncio.run(run_playwright(post_selected["url"], post_selected["over_18"], div_ids_list))
+  # asyncio.run(run_playwright(post_selected["url"], post_selected["over_18"], div_ids_list))
 
 if __name__ == "__main__":
   main()

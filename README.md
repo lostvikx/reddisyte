@@ -12,13 +12,15 @@ playwright install
 
 - [Top Subreddits](https://www.remote.tools/remote-work/best-subreddits)
 - [GDocs Library](https://cloud.google.com/text-to-speech/docs/create-audio-text-client-libraries)
+- [Background Video](https://www.youtube.com/watch?v=n_Dv4JMiwK8&ab_channel=bbswitzer)
 
 ## TODO
 
-- [ ] Refine comments: remove html tags
 - [x] Google TTS API
-- [ ] Use playwright package, instead of selenium
-- [ ] Create a setup file at root dir
+- [x] Use playwright package to extract screenshots
+- [ ] Refine comments: remove html tags
+- [ ] Give credit to background video in description
+- [ ] Create a setup file at root directory
 
 ## App Directory Tree
 

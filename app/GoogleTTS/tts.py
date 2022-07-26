@@ -5,7 +5,7 @@ from google.cloud import texttospeech
 
 class GoogleTTS():
 
-  def __init__(self, text:list, lang="en-US", limit_duration=30):
+  def __init__(self, text:list, lang="en-US", limit_duration=40):
     # Get realpath of this file
     self.dir_path = os.path.dirname(os.path.realpath(__file__))
     # Set env variable

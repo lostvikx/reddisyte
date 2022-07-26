@@ -38,14 +38,19 @@ def main():
 
   # Prepare for TTS
   text_list = [post_selected["title"].strip()]
-  div_ids_list= [post_selected["name"]]
+
+  div_ids_list = [post_selected["name"]]
   for com in comments:
     text_list.append(com["body"].strip())
     div_ids_list.append(com["name"])
 
-  # GoogleTTS(text=text_list)
-  # NOTE: sum(audio_clips) <= 55 seconds
-  asyncio.run(run_playwright(post_selected["url"], post_selected["over_18"], div_ids_list[:2]))
+  # NOTE: sum(audio_clips) <= 50 seconds
+  text_list = GoogleTTS(text=text_list).get_text_list()
+  div_ids_list = div_ids_list[:len(text_list)]
+
+  # print(text_list)
+  # TEST
+  asyncio.run(run_playwright(post_selected["url"], post_selected["over_18"], div_ids_list))
 
 if __name__ == "__main__":
   main()

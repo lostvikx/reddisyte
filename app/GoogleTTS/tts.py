@@ -12,6 +12,7 @@ class GoogleTTS():
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = f"{self.dir_path}/creds/service-account-file.json"
 
     self.text = text
+    self.audio_timestamps = [0]
     self.total_duration = float(0)
     clip_count = 0
 
@@ -44,6 +45,7 @@ class GoogleTTS():
 
       # Note: (duration_ts or frames) / sample_rate == duration
       self.total_duration += float(ffmpeg.probe(f"{self.dir_path}/temp/{audio_file_name}.opus")["format"]["duration"])
+      self.audio_timestamps.append(self.total_duration)
 
     print(f"Total Duration: {self.total_duration}")
     self.text = self.text[:clip_count]
@@ -72,3 +74,6 @@ class GoogleTTS():
   def get_text_list(self):
     return self.text.copy()
 
+
+  def get_audio_timestamps(self):
+    return self.audio_timestamps.copy()

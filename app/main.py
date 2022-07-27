@@ -6,6 +6,7 @@ from playwright.async_api import async_playwright
 from reddit import Reddit
 from GoogleTTS.tts import GoogleTTS
 from Playwright.screenshot import Playwright
+from VideoEditor.editor import VideoEditor
 
 # TODO: Only titles (no comments) --only-titles
 # NOTE: subreddits = ["Showerthoughts", "AskReddit"]
@@ -46,12 +47,14 @@ def main():
     div_ids_list.append(com["name"])
 
   # NOTE: sum(audio_clips) <= 40 seconds
-  # text_list = GoogleTTS(text=text_list[:3]).get_text_list()
-  # div_ids_list = div_ids_list[:len(text_list)]
+  g_tts = GoogleTTS(text=text_list[:3])
+  text_list = g_tts.get_text_list()
+  div_ids_list = div_ids_list[:len(text_list)]
 
-  # print(text_list)
+  print(g_tts.get_audio_timestamps())
   # TEST
   # asyncio.run(run_playwright(post_selected["url"], post_selected["over_18"], div_ids_list))
+
 
 if __name__ == "__main__":
   main()

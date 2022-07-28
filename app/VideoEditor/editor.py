@@ -43,15 +43,13 @@ class VideoEditor():
 
   def export(self, file_name):
     final = CompositeVideoClip([self.clip] + self.screenshots).set_audio(self.tts_audio).set_duration(self.tts_audio.duration)
-    final.write_videofile(f"{self.dir_path}/assets/out/{file_name}")
+    final.write_videofile(f"{self.dir_path}/../../Videos/{file_name}")
 
 
   def add_screenshots(self, path, timestamps):
     # screenshots_path = path
     self.screenshots = []
     reddit_screenshots = sorted(os.listdir(path), key=lambda name: int(name.split("_")[1].split(".")[0]))
-    print(reddit_screenshots)
-    breakpoint()
 
     for i,img in enumerate(reddit_screenshots):
       img_path = f"{path}/{img}"
@@ -66,8 +64,6 @@ class VideoEditor():
   def add_tts(self, path):
     tts_clips = []
     audio_clips = sorted(os.listdir(path), key=lambda name: int(name.split("_")[1].split(".")[0]))
-    print(audio_clips)
-    breakpoint()
     
     for audio_file in audio_clips:
       audio_file_path = f"{path}/{audio_file}"

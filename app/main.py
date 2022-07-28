@@ -66,7 +66,7 @@ def main():
   video.create_short()
   video.add_screenshots(path=f"{dir_path}/Playwright/temp", timestamps=g_tts.get_audio_timestamps())
   video.add_tts(path=f"{dir_path}/GoogleTTS/temp")
-  video.export("test_7.mp4")
+  video.export("hello.mp4")
 
 
 if __name__ == "__main__":

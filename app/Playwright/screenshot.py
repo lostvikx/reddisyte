@@ -18,7 +18,7 @@ class Playwright:
       await self.page.locator('button:has-text("Click to see nsfw")').click()
 
     print("Saving screenshots...")
-    dir_path = os.path.dirname(os.path.realpath(__file__))
+    self.dir_path = os.path.dirname(os.path.realpath(__file__))
     for idx, id in enumerate(div_ids):
-      await self.page.locator(f"div#{id}").screenshot(path=f"{dir_path}/temp/ss_{idx}.png")
+      await self.page.locator(f"div#{id}").screenshot(path=f"{self.dir_path}/temp/ss_{idx}.png")
 

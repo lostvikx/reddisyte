@@ -5,14 +5,14 @@ from google.cloud import texttospeech
 
 class GoogleTTS():
 
-  def __init__(self, text:list, lang="en-US", limit_duration=40):
+  def __init__(self, text:list, lang="en-US", limit_duration=45):
     # Get realpath of this file
     self.dir_path = os.path.dirname(os.path.realpath(__file__))
     # Set env variable
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = f"{self.dir_path}/creds/service-account-file.json"
 
     self.text = text
-    self.audio_timestamps = [0]
+    self.audio_timestamps = [float(0)]
     self.total_duration = float(0)
     clip_count = 0
 
@@ -45,7 +45,7 @@ class GoogleTTS():
 
       # Note: (duration_ts or frames) / sample_rate == duration
       self.total_duration += float(ffmpeg.probe(f"{self.dir_path}/temp/{audio_file_name}.opus")["format"]["duration"])
-      self.audio_timestamps.append(self.total_duration)
+      self.audio_timestamps.append(round(self.total_duration, 2))
 
     print(f"Total Duration: {self.total_duration}")
     self.text = self.text[:clip_count]
@@ -77,3 +77,4 @@ class GoogleTTS():
 
   def get_audio_timestamps(self):
     return self.audio_timestamps.copy()
+

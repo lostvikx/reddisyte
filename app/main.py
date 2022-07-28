@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import asyncio
+import os
 
 from playwright.async_api import async_playwright
 from reddit import Reddit
@@ -24,6 +25,7 @@ async def run_playwright(url:str, is_nsfw, div_ids:list):
 
 
 def main():
+  dir_path = os.path.dirname(os.path.realpath(__file__))
   # story: post title + top comments (posts with no media)
   reddit = Reddit(subreddit="AskReddit", content="story", num_posts=10)
   all_posts = reddit.get_all_posts(no_media=True)
@@ -46,14 +48,25 @@ def main():
     text_list.append(com["body"].strip())
     div_ids_list.append(com["name"])
 
-  # NOTE: sum(audio_clips) <= 40 seconds
-  g_tts = GoogleTTS(text=text_list[:3])
+  # print(text_list)
+  # print(div_ids_list)
+
+  # NOTE: sum(audio_clips) <= 45 seconds
+  g_tts = GoogleTTS(text=text_list)
   text_list = g_tts.get_text_list()
   div_ids_list = div_ids_list[:len(text_list)]
 
   print(g_tts.get_audio_timestamps())
-  # TEST
-  # asyncio.run(run_playwright(post_selected["url"], post_selected["over_18"], div_ids_list))
+
+  # Extracting screenshots from the subreddit
+  asyncio.run(run_playwright(post_selected["url"], post_selected["over_18"], div_ids_list))
+
+  # Creating the final video
+  video = VideoEditor("minecraft_1440p.webm")
+  video.create_short()
+  video.add_screenshots(path=f"{dir_path}/Playwright/temp", timestamps=g_tts.get_audio_timestamps())
+  video.add_tts(path=f"{dir_path}/GoogleTTS/temp")
+  video.export("test_7.mp4")
 
 
 if __name__ == "__main__":

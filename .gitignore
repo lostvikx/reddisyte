@@ -130,7 +130,10 @@ dmypy.json
 
 # Google API
 creds/
-tts_audio/
 char_count.txt
+*.opus
+*.mp3
+*.png
+*.mp4
 temp/
 assets/

@@ -27,7 +27,8 @@ async def run_playwright(url:str, is_nsfw, div_ids:list):
 def main():
   dir_path = os.path.dirname(os.path.realpath(__file__))
   # story: post title + top comments (posts with no media)
-  reddit = Reddit(subreddit="AskReddit", content="story", num_posts=10)
+  subreddit = "AskReddit"
+  reddit = Reddit(subreddit=subreddit, content="story", num_posts=10)
   all_posts = reddit.get_all_posts(no_media=True)
   # Display post titles
   reddit.display_all_posts_title()
@@ -66,7 +67,8 @@ def main():
   video.create_short()
   video.add_screenshots(path=f"{dir_path}/Playwright/temp", timestamps=g_tts.get_audio_timestamps())
   video.add_tts(path=f"{dir_path}/GoogleTTS/temp")
-  video.export("hello.mp4")
+  vids = len(os.listdir(f"{dir_path}/../Videos"))
+  video.export(f"{subreddit.lower()}_{vids}.mp4")
 
 
 if __name__ == "__main__":

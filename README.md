@@ -13,6 +13,7 @@ playwright install
 - [Top Subreddits](https://www.remote.tools/remote-work/best-subreddits)
 - [GDocs Library](https://cloud.google.com/text-to-speech/docs/create-audio-text-client-libraries)
 - [Background Video](https://www.youtube.com/watch?v=n_Dv4JMiwK8&ab_channel=bbswitzer)
+- [YouTube Docs](https://developers.google.com/youtube/v3/guides/uploading_a_video)
 
 ## TODO
 

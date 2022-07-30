@@ -12,15 +12,15 @@ playwright install
 
 - [Top Subreddits](https://www.remote.tools/remote-work/best-subreddits)
 - [GDocs Library](https://cloud.google.com/text-to-speech/docs/create-audio-text-client-libraries)
-- [Background Video](https://www.youtube.com/watch?v=n_Dv4JMiwK8&ab_channel=bbswitzer)
+- [Background Video](https://youtu.be/n_Dv4JMiwK8)
 - [YouTube Docs](https://developers.google.com/youtube/v3/guides/uploading_a_video)
 
 ## TODO
 
 - [x] Google TTS API
 - [x] Use playwright package to extract screenshots
-- [ ] Refine comments: remove html tags
-- [ ] Give credit to background video in description
+- [ ] Clean comments: remove html tags
+- [x] Give credit to background video in description
 - [ ] Create a setup file at root directory
 
 ## App Directory Tree
@@ -34,7 +34,19 @@ app/
 │   ├── temp
 │   └── tts.py
 ├── main.py
+├── Playwright
+│   ├── screenshot.py
+│   └── temp
 ├── reddit.py
-├── story.py
-└── utils.py
+├── rough_work.py
+├── utils.py
+├── VideoEditor
+│   ├── assets
+│   │   └── minecraft_1440p.webm
+│   ├── editor.py
+└── YTUpload
+    ├── creds
+    │   ├── client_secret.json
+    │   └── oauth2.json
+    └── upload.py
 ```

@@ -2,12 +2,14 @@
 
 import asyncio
 import os
+from utils import youtube_video_meta_defaults
 
 from playwright.async_api import async_playwright
 from reddit import Reddit
 from GoogleTTS.tts import GoogleTTS
 from Playwright.screenshot import Playwright
 from VideoEditor.editor import VideoEditor
+from YTUpload.upload import UploadYT
 
 # TODO: Only titles (no comments) --only-titles
 # NOTE: subreddits = ["Showerthoughts", "AskReddit"]
@@ -37,6 +39,7 @@ def main():
   post_num = int(input("Post Number: "))
   # TODO: Add error handling
   post_selected = all_posts[post_num]
+  post_title = post_selected["title"]
 
   # Top 20 comments of a particular post
   comments = reddit.extract_comments(post=post_selected,num_comments=20)
@@ -68,7 +71,21 @@ def main():
   video.add_screenshots(path=f"{dir_path}/Playwright/temp", timestamps=g_tts.get_audio_timestamps())
   video.add_tts(path=f"{dir_path}/GoogleTTS/temp")
   vids = len(os.listdir(f"{dir_path}/../Videos"))
-  video.export(f"{subreddit.lower()}_{vids}.mp4")
+  video_file = f"{subreddit.lower()}_{vids}.mp4"
+  video.export(video_file)
+
+  # Uploading video to YouTube
+  upload = UploadYT()
+  vid_meta = {
+    "file": f"{dir_path}/../Videos/{video_file}",
+    "title": f"{post_title} - r/{subreddit}",
+    "description": youtube_video_meta_defaults["descriptions"],
+    "keywords": youtube_video_meta_defaults["keywords"],
+    "privacy_status": "public"
+  }
+
+  youtube = upload.authenticate_service()
+  upload.init_upload(youtube,vid_meta)
 
 
 if __name__ == "__main__":

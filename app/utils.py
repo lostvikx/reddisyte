@@ -21,6 +21,8 @@ def clean_data(data:iter, required_fields:iter) -> list:
   return refined_data
 
 post_required_fields = ("title", "ups", "over_18", "spoiler", "name", "url", "media", "is_video", "id")
+# TODO: Extract only videos
+video_required_fields = ()
 # Don't extract replies
 comment_required_fields = ("name", "author", "body", "ups")
 
@@ -39,5 +41,9 @@ def filter_data(data:list, data_kind, length=300):
 def clean_text(text):
   pass
 
-# def get_file_realpath(file):
-#   return os.path.dirname(os.path.realpath(file))
+youtube_video_meta_defaults = {
+  "descriptions": "Subscribe for more Reddit content.\nThis video was automatically generated using various APIs.\nBackground video: https://youtu.be/n_Dv4JMiwK8 \nTags: #shorts #reddit #cool",
+  "keywords": "reddit,funny,shorts,memes,cool",
+}
+
+# print(youtube_video_meta_defaults["descriptions"])

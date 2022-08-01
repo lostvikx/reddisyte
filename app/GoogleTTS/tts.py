@@ -4,9 +4,17 @@ from google.cloud import texttospeech
 
 
 class GoogleTTS():
+  """
+  GoogleTTS interacts with the Google text-to-speech API.
+
+  Attributes:
+    dir_path (str): real path of this file
+    text (list): list of strings to be generated as audio
+    audio_timestamps (list: float): timestamps of each audio file
+    total_duration (float): total duration of all audio files
+  """
 
   def __init__(self, text:list, lang="en-US", limit_duration=45):
-    # Get realpath of this file
     self.dir_path = os.path.dirname(os.path.realpath(__file__))
     # Set env variable
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = f"{self.dir_path}/creds/service-account-file.json"

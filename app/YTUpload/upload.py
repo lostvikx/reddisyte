@@ -1,8 +1,5 @@
 import httplib2
 import os
-# import random
-# import sys
-# import time
 
 from googleapiclient.discovery import build
 # from apiclient.errors import HttpError
@@ -12,6 +9,12 @@ from oauth2client.file import Storage
 from oauth2client.tools import run_flow
 
 class UploadYT():
+  """
+  Uploads video to YouTube using the YouTube Data v3 API.
+
+  Attributes:
+    dir_path (str): Real path of this file
+  """
 
   def __init__(self):
     self.dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -46,8 +49,6 @@ class UploadYT():
         "privacyStatus": options["privacy_status"]
       }
     }
-
-    # print("Uploading video to YouTube...")
 
     insert_vid = youtube.videos().insert(
       part=",".join(body.keys()),

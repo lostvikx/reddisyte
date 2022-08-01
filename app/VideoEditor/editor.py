@@ -5,6 +5,16 @@ from moviepy.video import fx
 
 
 class VideoEditor():
+  """
+  VideoEditor, used to export a video file.
+
+  Attributes:
+    dir_path (str): Real path of this file
+    clip (VideoFileClip): Main video track, init with background video
+    screenshots (list: ImageClip): A list of image objects
+    tts_audio (AudioFileClip) : All TTS audio files concatenated
+  """
+
   def __init__(self, file_name):
     self.dir_path = os.path.dirname(os.path.realpath(__file__))
     self.clip = VideoFileClip(f"{self.dir_path}/assets/{file_name}")
@@ -47,7 +57,6 @@ class VideoEditor():
 
 
   def add_screenshots(self, path, timestamps):
-    # screenshots_path = path
     self.screenshots = []
     reddit_screenshots = sorted(os.listdir(path), key=lambda name: int(name.split("_")[1].split(".")[0]))
 

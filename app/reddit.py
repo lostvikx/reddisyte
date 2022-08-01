@@ -13,7 +13,7 @@ class Reddit():
     posts (list): A list of post objects, includes the metadata of each post
   """
 
-  def __init__(self, subreddit: str, content: str, page_sort="top", num_posts=None):
+  def __init__(self, subreddit: str, content: str, page_sort="top", num_posts=None, filter=None):
     """
     Construct a `Reddit` object, connects to the free reddit API trick.
 
@@ -22,15 +22,19 @@ class Reddit():
       content (str): Create a story using threads or compile videos `["story", "video"]`
       page_sort="top" (str): Sort the subreddit posts by one of these `["top", "best", "hot", "new"]`
       num_posts=None (int):Number of posts
+      filter=None (str): Filter the posts by ["day", "week", "month"]
     """
     self.subreddit = subreddit
     print(f"Subreddit: {self.subreddit}")
     self.req_headers = {"user-agent": "Linux Machine (Reddisyte)"}
     self.reddit_url = f"https://www.reddit.com/r/{subreddit}/{page_sort}.json"
     
-    if num_posts:
+    if num_posts: 
       self.reddit_url += f"?limit={num_posts}"
-
+      if filter: 
+        self.reddit_url += f"&t={filter}"
+    
+    # print(self.reddit_url)
     res = requests.get(self.reddit_url, headers=self.req_headers)
     try:
       res.raise_for_status()

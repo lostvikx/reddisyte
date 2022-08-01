@@ -30,16 +30,22 @@ def main():
   dir_path = os.path.dirname(os.path.realpath(__file__))
   # story: post title + top comments (posts with no media)
   subreddit = "AskReddit"
-  reddit = Reddit(subreddit=subreddit, content="story", num_posts=10)
+  reddit = Reddit(subreddit=subreddit, content="story", num_posts=10, filter="day")
   all_posts = reddit.get_all_posts(no_media=True)
   # Display post titles
   reddit.display_all_posts_title()
 
   # Select a post
-  post_num = int(input("Post Number: "))
-  # TODO: Add error handling
-  post_selected = all_posts[post_num]
-  post_title = post_selected["title"]
+  try:
+    post_num = int(input("Post Number: "))
+    post_selected = all_posts[post_num]
+  except:
+    print("Enter a valid number!")
+    exit()
+
+  post_title = post_selected["title"].strip()
+  if post_selected["over_18"]:
+    post_title += " [NSFW]"
 
   # Top 20 comments of a particular post
   comments = reddit.extract_comments(post=post_selected,num_comments=20)

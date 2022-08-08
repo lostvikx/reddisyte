@@ -29,11 +29,19 @@ class UploadYT():
     creds = storage.get()
 
     if creds is None or creds.invalid:
+      print("Credentials invalid or expired!")
+      # Browser pop-up window to authenticate account
       creds = run_flow(flow, storage)
 
-    return build("youtube", "v3", http=creds.authorize(httplib2.Http()))
+    try:
+      oauth = creds.authorize(httplib2.Http())
+    except:
+      creds = run_flow(flow, storage)
+      oauth = creds.authorize(httplib2.Http())
 
-  
+    return build("youtube", "v3", http=oauth)
+
+
   def init_upload(self, youtube, options):
     tags = None
     if options["keywords"]:

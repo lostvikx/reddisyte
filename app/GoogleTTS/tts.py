@@ -14,7 +14,7 @@ class GoogleTTS():
     total_duration (float): total duration of all audio files
   """
 
-  def __init__(self, text:list, lang="en-US", limit_duration=45):
+  def __init__(self, text:list, lang="en-US", limit_duration=40):
     self.dir_path = os.path.dirname(os.path.realpath(__file__))
     # Set env variable
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = f"{self.dir_path}/creds/service-account-file.json"

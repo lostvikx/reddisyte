@@ -30,7 +30,7 @@ def main():
   dir_path = os.path.dirname(os.path.realpath(__file__))
   # story: post title + top comments (posts with no media)
   subreddit = "AskReddit"
-  reddit = Reddit(subreddit=subreddit, content="story", num_posts=10, filter="day")
+  reddit = Reddit(subreddit=subreddit, content="story", num_posts=10, filter="week")
   all_posts = reddit.get_all_posts(no_media=True)
   # Display post titles
   reddit.display_all_posts_title()
@@ -61,7 +61,7 @@ def main():
   # print(text_list)
   # print(div_ids_list)
 
-  # NOTE: sum(audio_clips) <= 45 seconds
+  # NOTE: sum(audio_clips) <= 40 seconds
   g_tts = GoogleTTS(text=text_list)
   text_list = g_tts.get_text_list()
   div_ids_list = div_ids_list[:len(text_list)]
@@ -81,6 +81,10 @@ def main():
   video.export(video_file)
 
   # Uploading video to YouTube
+  up = input("Upload video on YouTube? [Y/n] ").lower()
+  if up in ["n", "no"]:
+    exit()
+
   upload = UploadYT()
   vid_meta = {
     "file": f"{dir_path}/../Videos/{video_file}",

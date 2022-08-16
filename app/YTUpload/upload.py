@@ -19,6 +19,7 @@ class UploadYT():
   def __init__(self):
     self.dir_path = os.path.dirname(os.path.realpath(__file__))
     
+
   def authenticate_service(self):
     flow = flow_from_clientsecrets(
       filename=f"{self.dir_path}/creds/client_secret.json",
@@ -26,9 +27,9 @@ class UploadYT():
     )
 
     storage = Storage(f"{self.dir_path}/creds/oauth2.json")
-    creds = storage.get()
+    creds = storage.get() or None
 
-    if creds is None or creds.invalid:
+    if creds is None or bool(creds.invalid):
       print("Credentials invalid or expired!")
       # Browser pop-up window to authenticate account
       creds = run_flow(flow, storage)
@@ -77,4 +78,4 @@ class UploadYT():
           print(f"Video: https://www.youtube.com/shorts/{res['id']} was uploaded!")
       except Exception as err:
         print(f"Error: {err}")
-
+        exit()

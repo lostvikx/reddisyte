@@ -30,7 +30,7 @@ def main():
   dir_path = os.path.dirname(os.path.realpath(__file__))
   # story: post title + top comments (posts with no media)
   subreddit = "AskReddit"
-  reddit = Reddit(subreddit=subreddit, content="story", num_posts=10, filter="week")
+  reddit = Reddit(subreddit=subreddit, content="story", num_posts=20, filter="week")
   all_posts = reddit.get_all_posts(no_media=True)
   # Display post titles
   reddit.display_all_posts_title()
@@ -86,6 +86,7 @@ def main():
     exit()
 
   upload = UploadYT()
+
   vid_meta = {
     "file": f"{dir_path}/../Videos/{video_file}",
     "title": f"{post_title} - r/{subreddit}",
@@ -93,6 +94,11 @@ def main():
     "keywords": youtube_video_meta_defaults["keywords"],
     "privacy_status": "public"
   }
+
+  if len(vid_meta["title"]) >= 100:
+    print(f'Title Character Limit!\nTitle: {vid_meta["title"]}')
+    new_vid_title = input("Enter a custom YT title: ")
+    vid_meta["title"] = f"{new_vid_title} - r/{subreddit}"
 
   youtube = upload.authenticate_service()
   upload.init_upload(youtube,vid_meta)

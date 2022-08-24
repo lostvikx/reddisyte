@@ -36,7 +36,7 @@ class GoogleTTS():
 
       voice = texttospeech.VoiceSelectionParams(
         language_code=lang, 
-        name=lang+"-Wavenet-H",
+        name=lang+"-Wavenet-G", # G or H
         ssml_gender=texttospeech.SsmlVoiceGender.FEMALE
       )
       audio_config = texttospeech.AudioConfig(
@@ -55,7 +55,7 @@ class GoogleTTS():
       self.total_duration += float(ffmpeg.probe(f"{self.dir_path}/temp/{audio_file_name}.opus")["format"]["duration"])
       self.audio_timestamps.append(round(self.total_duration, 2))
 
-    print(f"Total Duration: {self.total_duration}")
+    print(f"Total Duration: {self.total_duration:.2f}")
     self.text = self.text[:clip_count]
     total_char_count = sum([len(t) for t in self.text])
     self.save_char_count(total_char_count)

@@ -1,5 +1,6 @@
 import httplib2
 import os
+import json
 
 from googleapiclient.discovery import build
 # from apiclient.errors import HttpError
@@ -26,21 +27,25 @@ class UploadYT():
       scope="https://www.googleapis.com/auth/youtube.upload"
     )
 
-    storage = Storage(f"{self.dir_path}/creds/oauth2.json")
-    creds = storage.get() or None
+    oauth_file_path = f"{self.dir_path}/creds/oauth2.json"
 
-    if creds is None or bool(creds.invalid):
-      print("Credentials invalid or expired!")
-      # Browser pop-up window to authenticate account
-      creds = run_flow(flow, storage)
+    storage = Storage(oauth_file_path)
+    creds = storage.get()
 
+    # Browser pop-up window to authenticate account
     try:
-      oauth = creds.authorize(httplib2.Http())
-    except:
-      creds = run_flow(flow, storage)
-      oauth = creds.authorize(httplib2.Http())
+      with open(oauth_file_path, "r") as f:
+        oauth_token = json.load(f)
 
-    return build("youtube", "v3", http=oauth)
+        if oauth_token["invalid"]:
+          print("Credentials expired!")
+          creds = run_flow(flow, storage)
+          
+    except FileNotFoundError:
+      print("OAuth2 file not found!")
+      creds = run_flow(flow, storage)
+
+    return build("youtube", "v3", http=creds.authorize(httplib2.Http()))
 
 
   def init_upload(self, youtube, options):

@@ -1,3 +1,5 @@
+import re
+
 def clean_data(data:iter, required_fields:iter) -> list:
   """
   Returns the list with its dict elements having only the required fields.
@@ -20,30 +22,50 @@ def clean_data(data:iter, required_fields:iter) -> list:
 
   return refined_data
 
+
 post_required_fields = ("title", "ups", "over_18", "spoiler", "name", "url", "media", "is_video", "id")
 # TODO: Extract only videos
 video_required_fields = ()
 # Don't extract replies
 comment_required_fields = ("name", "author", "body", "ups")
 
+
+def clean_text(text:str):
+  url_pattern = r"\[?http[s]?:\/{2}\S+\]?"
+  clean = re.sub(r"[&#]\w+;","",re.sub(url_pattern,"",text)).strip()
+
+  # Add punctuations:
+  punctuations = list(".!?")
+  if not clean[-1] in punctuations:
+    clean += "."
+
+  return clean
+
+
 def filter_data(data:list, data_kind, length=300):
   """
   Filter out long data.
+
+  Args:
+    data_kind == "title" or "body" (comment)
   """
-  # data_kind := title or comment
   filtered_data = []
   for d in data:
+    text = clean_text(d[data_kind])
+    d[data_kind] = text
+
     if len(d[data_kind]) <= length:
       filtered_data.append(d)
 
   return filtered_data
 
-def clean_text(text):
-  pass
 
 youtube_video_meta_defaults = {
   "descriptions": "Subscribe for more Reddit content.\nThis video was automatically generated using various APIs.\nBackground video: https://youtu.be/n_Dv4JMiwK8 \nTags: #shorts #reddit #cool",
   "keywords": "reddit,funny,shorts,memes,cool",
 }
 
-# print(youtube_video_meta_defaults["descriptions"])
+def print_story(text_list:list):
+  for i,t in enumerate(text_list):
+    if i == 0: print(t)
+    else: print(f"--\n{t}")

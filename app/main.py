@@ -2,7 +2,7 @@
 
 import asyncio
 import os
-from utils import youtube_video_meta_defaults
+from utils import youtube_video_meta_defaults, print_story
 
 from playwright.async_api import async_playwright
 from reddit import Reddit
@@ -30,7 +30,7 @@ def main():
   dir_path = os.path.dirname(os.path.realpath(__file__))
   # story: post title + top comments (posts with no media)
   subreddit = "AskReddit"
-  reddit = Reddit(subreddit=subreddit, content="story", num_posts=20, filter="week")
+  reddit = Reddit(subreddit=subreddit, content="story", num_posts=10, filter="week")
   all_posts = reddit.get_all_posts(no_media=True)
   # Display post titles
   reddit.display_all_posts_title()
@@ -55,14 +55,16 @@ def main():
 
   div_ids_list = [post_selected["name"]]
   for com in comments:
-    text_list.append(com["body"].strip())
+    text_list.append(com["body"])
     div_ids_list.append(com["name"])
 
-  # print(text_list)
-  # print(div_ids_list)
+  # Print out the title & its comments
+  print_story(text_list)
+  do = input("Continue? [Y/n] ").lower()
+  if do in ["n", "no"]: exit()
 
-  # NOTE: sum(audio_clips) <= 40 seconds
-  g_tts = GoogleTTS(text=text_list)
+  # sum(audio_clips) <= 40 seconds
+  g_tts = GoogleTTS(text=text_list, limit_duration=40)
   text_list = g_tts.get_text_list()
   div_ids_list = div_ids_list[:len(text_list)]
 
@@ -82,8 +84,7 @@ def main():
 
   # Uploading video to YouTube
   up = input("Upload video on YouTube? [Y/n] ").lower()
-  if up in ["n", "no"]:
-    exit()
+  if up in ["n", "no"]: exit()
 
   upload = UploadYT()
 

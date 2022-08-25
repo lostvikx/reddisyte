@@ -50,14 +50,20 @@ class Reddit():
       self.posts = uncleaned_data
 
 
-  def get_all_posts(self, no_media=True) -> list:
+  def get_all_posts(self, no_media) -> list:
     """
     Return all posts.
     """
     if no_media:
-      return [post for post in self.posts if post["media"] is None]
+      print("Fetching posts with no media...")
+      self.posts = [post for post in self.posts if post["media"] is None]
+      # Test:
+      # for post in self.posts: print({"title": post["title"], "url": post["url"], "media": post["media"]})
     else:
-      return self.posts.copy()
+      print("Fetching posts with media...")
+      self.posts = [post for post in self.posts if post["media"]]
+
+    return self.posts.copy()
 
 
   def display_all_posts_title(self):

@@ -24,22 +24,29 @@ async def run_playwright(url:str, is_nsfw, div_ids:list):
     await browser.close()
 
 
-def create_story():
+def create_story(subreddit:str, num:int, filter:str):
   dir_path = os.path.dirname(os.path.realpath(__file__))
   # story: post title + top comments (posts with no media)
-  subreddit = "AskReddit"
-  reddit = Reddit(subreddit=subreddit, content="story", num_posts=10, filter="week")
+  reddit = Reddit(subreddit=subreddit, content="story", num_posts=num, filter=filter)
   all_posts = reddit.get_all_posts(no_media=True)
   # Display post titles
   reddit.display_all_posts_title()
 
   # Select a post
-  try:
-    post_num = int(input("Post Number: "))
-    post_selected = all_posts[post_num]
-  except:
-    print("Enter a valid number!")
-    exit()
+  while True:
+    try:
+      if len(all_posts):
+        post_num = int(input("Post Number: "))
+        post_selected = all_posts[post_num]
+        break
+      else:
+        raise Exception
+    except ValueError:
+      print("Enter a valid number!")
+      continue
+    except:
+      print("No posts were found!")
+      exit()
 
   post_title = post_selected["title"].strip()
   if post_selected["over_18"]:
@@ -101,3 +108,10 @@ def create_story():
 
   youtube = upload.authenticate_service()
   upload.init_upload(youtube,vid_meta)
+
+  # Delete final video file (Needs checking)
+  delete_file = input("Delete final video? [y/N]").lower()
+  if not delete_file in ["y", "yes"]: exit()
+
+  os.remove(video_file)
+  print("Final video deleted successfully!")

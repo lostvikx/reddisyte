@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 import story
+# import video
+# import compilation
+
 from argparse import ArgumentParser
 
 
@@ -8,17 +11,23 @@ def main():
   parser = ArgumentParser(description="A simple terminal tool to scrape Reddit for content, because good artists borrow, great artists steal.")
   group = parser.add_mutually_exclusive_group(required=True)
 
-  # Can ignore this:
-  group.add_argument("-s","--create-story",action="store_true",help="create a video story using reddit comments and use text-to-speech for narration, then upload with minecraft background video")
-  group.add_argument("-v","--short-video",action="store_true",help="simply download & upload a short video, preferably less than 60s")
-  group.add_argument("-c","--compilation-video",action="store_true",help="download a bunch of short videos & compile them together, then upload")
+  # Main commands:
+  group.add_argument("-s","--story",action="store_true",help="create a video story using reddit comments and use text-to-speech for narration, then upload with minecraft background video")
+  group.add_argument("-v","--video",action="store_true",help="simply download & upload a short video, preferably less than 60s")
+  group.add_argument("-c","--compilation",action="store_true",help="download a bunch of short videos & compile them together, then upload")
+
+  # Optionals:
+  parser.add_argument("--subreddit",help="provide subreddit to extract content from",default="AskReddit",type=str)
+  parser.add_argument("--num-posts",help="number of posts to extract from the subreddit",default=10,type=int)
+  parser.add_argument("--filter-time",choices=["hour","day","week","month","quarter","year","all"],help="filter posts by a time period",default="day")
+  parser.add_argument("--page-sort",choices=["hot","new","top","rising"],help="sort page in by different trending status")
 
   args = parser.parse_args()
+  print(args)
 
-  if args.create_story: story.create_story()
+  if args.story: story.create_story(subreddit=args.subreddit,num=args.num_posts,filter=args.filter_time)
   elif args.short_video: print("short video fn")
-  elif args.compilation_video: print("compile fn")  
-
+  elif args.compilation_video: print("compile fn")
 
 if __name__ == "__main__":
   main()

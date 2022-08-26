@@ -16,15 +16,27 @@ def clean_data(data:iter, required_fields:iter) -> list:
   for d in data:
     new_data = dict()
 
-    if d.get("is_video", None):
+    if d.get("is_video", None) or d.get("media", None):
+      is_gif_video = False
+
       for key, val in d.items():
         if (key in required_fields):
           if key == "media":
-            fallback_url = val["reddit_video"]["fallback_url"]
-            new_data["video_url"] = fallback_url
-            new_data["audio_url"] = re.sub(r"[\w+\/]DASH_(\d+)", "/DASH_audio", fallback_url)
+            new_data[key] = True
+            fallback_url = val.get("reddit_video",{}).get("fallback_url",None)
+
+            if not fallback_url is None:
+              fallback_url = re.sub(r"\?source=fallback","",fallback_url)
+              new_data["video_url"] = fallback_url
+              new_data["audio_url"] = re.sub(r"DASH_\d+", "DASH_audio", fallback_url)
+            else:
+              gif_url = val.get("oembed",{}).get("thumbnail_url",None)
+              new_data["video_url"] = re.sub(r"\-+mobile\.jpg", ".mp4", gif_url)
+              is_gif_video = True
+              
           else:
-            new_data[key] = val
+            if is_gif_video: new_data["is_video"] = True
+            else: new_data[key] = val
     else:
       for key, val in d.items():
         if (key in required_fields):
@@ -33,12 +45,11 @@ def clean_data(data:iter, required_fields:iter) -> list:
 
   return refined_data
 
-
+# Extract story materials
 post_required_fields = ("title", "ups", "over_18", "spoiler", "name", "url", "media", "is_video", "id")
-# TODO: Extract only videos
-video_required_fields = ("title", "ups", "over_18", "spoiler", "name", "media", "is_video")
-# Don't extract replies
-comment_required_fields = ("name", "author", "body", "ups")
+comment_required_fields = ("name", "author", "body", "ups") # Don't extract replies
+# Extract only videos
+video_required_fields = ("title", "ups", "over_18", "spoiler", "name", "media", "is_video", "url")
 
 
 def clean_text(text:str):
@@ -80,3 +91,22 @@ def print_story(text_list:list):
   for i,t in enumerate(text_list):
     if i == 0: print(t)
     else: print(f"--\n{t}")
+
+def select_post(all_posts:list)->dict:
+  # Select a post
+  while True:
+    try:
+      if len(all_posts):
+        post_num = int(input("Post Number: "))
+        post_selected = all_posts[post_num]
+        break
+      else:
+        raise Exception
+    except ValueError:
+      print("Enter a valid number!")
+      continue
+    except:
+      print("No posts were found!")
+      exit()
+
+  return post_selected

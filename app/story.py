@@ -10,7 +10,7 @@ from VideoEditor.editor import VideoEditor
 from YTUpload.upload import UploadYT
 
 # TODO: Only titles (no comments) --only-titles
-# NOTE: subreddits = ["Showerthoughts", "AskReddit"]
+# NOTE: useful_subreddits = ["Showerthoughts", "AskReddit"]
 
 
 async def run_playwright(url:str, is_nsfw, div_ids:list):

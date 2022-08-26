@@ -13,7 +13,7 @@ class Reddit():
     posts (list): A list of post objects, includes the metadata of each post
   """
 
-  def __init__(self, subreddit: str, content: str, page_sort="top", num_posts=None, filter="day"):
+  def __init__(self, subreddit:str, content:str, page_sort="top", num_posts=None, filter="day"):
     """
     Construct a `Reddit` object, connects to the free reddit API trick.
 
@@ -45,9 +45,8 @@ class Reddit():
 
     if content == "story":
       self.posts = utils.clean_data(uncleaned_data, utils.post_required_fields)
-    else:
-      # TODO: content == "video"
-      self.posts = uncleaned_data
+    elif content == "video":
+      self.posts = utils.clean_data(uncleaned_data, utils.video_required_fields)
 
 
   def get_all_posts(self, no_media) -> list:
@@ -60,8 +59,8 @@ class Reddit():
       # Test:
       # for post in self.posts: print({"title": post["title"], "url": post["url"], "media": post["media"]})
     else:
-      print("Fetching posts with media...")
-      self.posts = [post for post in self.posts if post["media"]]
+      print("Fetching posts with media (only video)...")
+      self.posts = [post for post in self.posts if post["is_video"]]
 
     return self.posts.copy()
 

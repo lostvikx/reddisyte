@@ -61,7 +61,7 @@ class Reddit():
       # for post in self.posts: print({"title": post["title"], "url": post["url"], "media": post["media"]})
     else:
       print("Fetching posts with media (only video)...")
-      self.posts = [post for post in self.posts if post.get("media", None)]
+      self.posts = [post for post in self.posts if post.get("media", None) and post.get("video_url", None)]
 
     return self.posts.copy()
 

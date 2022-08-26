@@ -1,4 +1,5 @@
 import re
+import requests
 
 def clean_data(data:iter, required_fields:iter) -> list:
   """
@@ -119,3 +120,14 @@ def select_post(all_posts:list)->dict:
       exit()
 
   return post_selected
+
+def save_res_file(uri:str, save_path:str):
+  with requests.get(uri, stream=True) as res:
+    try:
+      res.raise_for_status()
+      with open(f"{save_path}", "wb") as file:
+        for chunk in res.iter_content(chunk_size=None):
+          file.write(chunk)
+    except Exception as err:
+      print(f"HTTP Error: {err}")
+      exit()

@@ -35,9 +35,10 @@ class Reddit():
     res = requests.get(self.reddit_url, headers=self.req_headers)
     try:
       res.raise_for_status()
-      data = res.json()["data"]
+      data = res.json().get("data",None)
     except Exception as err:
       print(f"HTTP Error: {err}")
+      exit()
 
     # Post title length < 300 chars
     uncleaned_data = utils.filter_data([child["data"] for child in data["children"]], "title")
@@ -60,7 +61,7 @@ class Reddit():
       # for post in self.posts: print({"title": post["title"], "url": post["url"], "media": post["media"]})
     else:
       print("Fetching posts with media (only video)...")
-      self.posts = [post for post in self.posts if post["is_video"]]
+      self.posts = [post for post in self.posts if post.get("media", None)]
 
     return self.posts.copy()
 

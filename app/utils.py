@@ -17,7 +17,6 @@ def clean_data(data:iter, required_fields:iter) -> list:
     new_data = dict()
 
     if d.get("is_video", None) or d.get("media", None):
-      is_gif_video = False
 
       for key, val in d.items():
         if (key in required_fields):
@@ -32,11 +31,21 @@ def clean_data(data:iter, required_fields:iter) -> list:
             else:
               gif_url = val.get("oembed",{}).get("thumbnail_url",None)
               new_data["video_url"] = re.sub(r"\-+mobile\.jpg", ".mp4", gif_url)
-              is_gif_video = True
               
           else:
-            if is_gif_video: new_data["is_video"] = True
-            else: new_data[key] = val
+            new_data[key] = val
+
+      new_data["is_video"] = True
+
+    elif d.get("preview",None):
+      for key, val in d.items():
+        if (key in required_fields):
+          new_data[key] = val
+
+      new_data["video_url"] = d.get("preview",{}).get("reddit_video_preview",{}).get("fallback_url",None)
+      new_data["media"] = True
+      new_data["is_video"] = True
+
     else:
       for key, val in d.items():
         if (key in required_fields):

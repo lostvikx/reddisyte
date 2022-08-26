@@ -15,9 +15,11 @@ class VideoEditor():
     tts_audio (AudioFileClip) : All TTS audio files concatenated
   """
 
-  def __init__(self, file_name):
+  def __init__(self, background_video_file=None):
     self.dir_path = os.path.dirname(os.path.realpath(__file__))
-    self.clip = VideoFileClip(f"{self.dir_path}/assets/{file_name}")
+
+    if background_video_file:
+      self.clip = VideoFileClip(f"{self.dir_path}/assets/{background_video_file}")
 
 
   def set_volume(self, fraction):

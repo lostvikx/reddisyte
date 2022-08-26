@@ -64,7 +64,7 @@ def create_story(subreddit:str, num:int, filter:str):
   asyncio.run(run_playwright(post_selected["url"], post_selected["over_18"], div_ids_list))
 
   # Creating the final video
-  video = VideoEditor("minecraft_1440p.webm")
+  video = VideoEditor(background_video_file="minecraft_1440p.webm")
   video.create_short()
   video.add_screenshots(path=f"{dir_path}/Playwright/temp", timestamps=g_tts.get_audio_timestamps())
   video.add_tts(path=f"{dir_path}/GoogleTTS/temp")

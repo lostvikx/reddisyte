@@ -1,11 +1,19 @@
 # Reddit Parasyte
+
 Basically steal content from Reddit and post it as shorts on YouTube and earn free money 💰
 
 ## Usage
+
 ```bash
-sudo apt install ffmpeg
+sudo apt install ffmpeg mpv
 cd reddisyte/ && pip install -r requirements.txt
 playwright install
+```
+
+## Docs
+
+```bash
+python path_to/reddisyte/app/main.py --help
 ```
 
 ## Useful Links
@@ -20,7 +28,7 @@ playwright install
 
 - [x] Google TTS API
 - [x] Use playwright package to extract screenshots
-- [ ] Clean comments, before initializing TTS
+- [x] Clean comments, before initializing TTS
 - [x] Give credit to background video in description
 - [ ] Create a setup file at root directory
 

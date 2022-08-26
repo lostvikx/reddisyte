@@ -1,6 +1,6 @@
 import asyncio
 import os
-from utils import youtube_video_meta_defaults, print_story
+from utils import youtube_video_meta_defaults, print_story, select_post
 
 from playwright.async_api import async_playwright
 from reddit import Reddit
@@ -31,22 +31,7 @@ def create_story(subreddit:str, num:int, filter:str):
   all_posts = reddit.get_all_posts(no_media=True)
   # Display post titles
   reddit.display_all_posts_title()
-
-  # Select a post
-  while True:
-    try:
-      if len(all_posts):
-        post_num = int(input("Post Number: "))
-        post_selected = all_posts[post_num]
-        break
-      else:
-        raise Exception
-    except ValueError:
-      print("Enter a valid number!")
-      continue
-    except:
-      print("No posts were found!")
-      exit()
+  post_selected = select_post(all_posts)
 
   post_title = post_selected["title"].strip()
   if post_selected["over_18"]:

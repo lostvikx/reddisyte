@@ -15,9 +15,20 @@ def clean_data(data:iter, required_fields:iter) -> list:
 
   for d in data:
     new_data = dict()
-    for key, val in d.items():
-      if (key in required_fields):
-        new_data[key] = val
+
+    if d.get("is_video", None):
+      for key, val in d.items():
+        if (key in required_fields):
+          if key == "media":
+            fallback_url = val["reddit_video"]["fallback_url"]
+            new_data["video_url"] = fallback_url
+            new_data["audio_url"] = re.sub(r"[\w+\/]DASH_(\d+)", "/DASH_audio", fallback_url)
+          else:
+            new_data[key] = val
+    else:
+      for key, val in d.items():
+        if (key in required_fields):
+          new_data[key] = val
     refined_data.append(new_data)
 
   return refined_data
@@ -25,7 +36,7 @@ def clean_data(data:iter, required_fields:iter) -> list:
 
 post_required_fields = ("title", "ups", "over_18", "spoiler", "name", "url", "media", "is_video", "id")
 # TODO: Extract only videos
-video_required_fields = ()
+video_required_fields = ("title", "ups", "over_18", "spoiler", "name", "media", "is_video")
 # Don't extract replies
 comment_required_fields = ("name", "author", "body", "ups")
 

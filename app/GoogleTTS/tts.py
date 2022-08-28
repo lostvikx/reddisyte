@@ -3,7 +3,7 @@ import ffmpeg
 from google.cloud import texttospeech
 
 
-class GoogleTTS():
+class GoogleTTS:
   """
   GoogleTTS interacts with the Google text-to-speech API.
 

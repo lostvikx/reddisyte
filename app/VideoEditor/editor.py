@@ -4,7 +4,7 @@ from moviepy.editor import *
 from moviepy.video import fx
 
 
-class VideoEditor():
+class VideoEditor:
   """
   VideoEditor, used to export a video file.
 

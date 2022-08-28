@@ -1,6 +1,6 @@
 import asyncio
 import os
-from utils import youtube_video_meta_defaults, print_story, select_post
+from utils import story_youtube_meta_defaults, print_story, select_post, prompt_final_video_del
 
 from playwright.async_api import async_playwright
 from reddit import Reddit
@@ -76,13 +76,13 @@ def create_story(subreddit:str, num:int, filter:str):
   up = input("Upload video on YouTube? [Y/n] ").lower()
   if up in ["n", "no"]: exit()
 
-  upload = UploadYT()
+  upload = UploadYT(channel_name="Reddisyte")
 
   vid_meta = {
     "file": f"{dir_path}/../Videos/{video_file}",
     "title": f"{post_title} - r/{subreddit}",
-    "description": youtube_video_meta_defaults["descriptions"],
-    "keywords": youtube_video_meta_defaults["keywords"],
+    "description": story_youtube_meta_defaults["description"],
+    "keywords": story_youtube_meta_defaults["keywords"],
     "privacy_status": "public"
   }
 
@@ -94,9 +94,4 @@ def create_story(subreddit:str, num:int, filter:str):
   youtube = upload.authenticate_service()
   upload.init_upload(youtube,vid_meta)
 
-  # Delete final video file (Needs checking)
-  delete_file = input("Delete final video? [y/N]").lower()
-  if not delete_file in ["y", "yes"]: exit()
-
-  os.remove(video_file)
-  print("Final video deleted successfully!")
+  prompt_final_video_del(f"{dir_path}/../Videos/{video_file}")

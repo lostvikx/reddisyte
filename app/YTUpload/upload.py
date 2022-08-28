@@ -1,15 +1,21 @@
 import httplib2
 import os
 import json
+import argparse
 
 from googleapiclient.discovery import build
-# from apiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import run_flow
 
-class UploadYT():
+parser = argparse.ArgumentParser()
+parser.add_argument("--auth_host_name", default="localhost")
+parser.add_argument("--noauth_local_webserver", default=False)
+parser.add_argument("--logging_level")
+parser.add_argument("--auth_host_port", default=[8080,8090])
+
+class UploadYT:
   """
   Uploads video to YouTube using the YouTube Data v3 API.
 
@@ -17,9 +23,10 @@ class UploadYT():
     dir_path (str): Real path of this file
   """
 
-  def __init__(self):
+  def __init__(self, channel_name):
     self.dir_path = os.path.dirname(os.path.realpath(__file__))
-    
+    self.channel_name = channel_name
+
 
   def authenticate_service(self):
     flow = flow_from_clientsecrets(
@@ -27,10 +34,11 @@ class UploadYT():
       scope="https://www.googleapis.com/auth/youtube.upload"
     )
 
-    oauth_file_path = f"{self.dir_path}/creds/oauth2.json"
+    oauth_file_path = f"{self.dir_path}/creds/{self.channel_name}_oauth2.json"
 
     storage = Storage(oauth_file_path)
     creds = storage.get()
+    flags = parser.parse_args("--auth_host_name localhost --logging_level INFO".split())
 
     # Browser pop-up window to authenticate account
     try:
@@ -39,11 +47,11 @@ class UploadYT():
 
         if oauth_token["invalid"]:
           print("Credentials expired!")
-          creds = run_flow(flow, storage)
+          creds = run_flow(flow, storage, flags)
           
     except FileNotFoundError:
       print("OAuth2 file not found!")
-      creds = run_flow(flow, storage)
+      creds = run_flow(flow, storage, flags)
 
     return build("youtube", "v3", http=creds.authorize(httplib2.Http()))
 

@@ -23,6 +23,7 @@ python path_to/reddisyte/app/main.py --help
 - [Background Video](https://youtu.be/n_Dv4JMiwK8)
 - [YouTube Docs](https://developers.google.com/youtube/v3/guides/uploading_a_video)
 - [YouTube Data API Quota](https://console.cloud.google.com/apis/api/youtube.googleapis.com/quotas?project=reddisyte)
+- [Username Generator](https://jimpix.co.uk/words/random-username-generator.asp)
 
 ## TODO
 

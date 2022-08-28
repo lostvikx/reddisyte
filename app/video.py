@@ -1,9 +1,9 @@
 import os
 import subprocess
 
-from utils import select_post, save_res_file
+from utils import select_post, render_video, video_youtube_meta_defaults, prompt_final_video_del, clear_terminal
 from reddit import Reddit
-from moviepy.editor import AudioFileClip, AudioClip, VideoFileClip
+from YTUpload.upload import UploadYT
 
 # NOTE: useful_subreddits = ["TikTokCringe"]
 
@@ -19,7 +19,6 @@ def extract_short_video(subreddit, num, page_sort, filter):
   # Selecting the perfect video
   while True:
     post_selected = select_post(all_posts)
-
     # Preview video:
     subprocess.run(["mpv", "--no-terminal", post_selected["video_url"]])
     done = input("Found the perfect one? [Y/n] ").lower()
@@ -34,42 +33,43 @@ def extract_short_video(subreddit, num, page_sort, filter):
   audio_url = post_selected.get("audio_url", None)
   clip_name = post_selected.get("name", "test")
 
-  def render_video(save_dir_path, video_url, audio_url, clip_name):
+  video_path = render_video(videos_dir_path, video_url, audio_url, clip_name)
 
-    n_vids = len(os.listdir(save_dir_path)) - 1
+  # Uploading video on YouTube
+  up = input("Upload video on YouTube? [Y/n] ").lower()
+  if up in ["n", "no"]: exit()
 
-    video_file_ext = video_url.split(".")[-1]
-    video_file_name = f"{clip_name}.{video_file_ext}"
-    temp_dir = f"{save_dir_path}/temp"
+  clear_terminal()
 
-    # Save audio file
-    if audio_url:
-      audio_file_ext = audio_url.split(".")[-1]
-      audio_file_name = f"{clip_name}.{audio_file_ext}"
+  # Select a channel to upload:
+  channels = ["YawningMocha", "LilacBae"]
+  for i, name in enumerate(channels): print(i, name)
 
-      save_res_file(audio_url, f"{temp_dir}/{audio_file_name}")
+  while True:
+    try:
+      select_channel = int(input(f"Select a YouTube Channel: "))
+      channel_name = channels[select_channel]
+      break
+    except:
+      print("Please select a valid channel")
+      continue
 
-      # Change audio file format to .mp3
-      if audio_file_ext == "mp4":
-        editor = AudioFileClip(f"{temp_dir}/{audio_file_name}")
-        audio_file_ext = "mp3"
-        audio_file_name = f"{clip_name}.{audio_file_ext}"
+  upload = UploadYT(channel_name=channel_name)
 
-        editor.write_audiofile(f"{temp_dir}/{audio_file_name}")
-        editor.close()
-      
-      # Save video file
-      save_res_file(video_url, f"{temp_dir}/{video_file_name}")
+  vid_title = post_selected.get('title')
+  print(f"Sample Title: {vid_title}")
+  t = input("Wanna use this as the title? [Y/n] ").lower()
+  if t in ["no", "n"]: vid_title = input("Enter YT video title: ")
 
-      video_clip = VideoFileClip(f"{temp_dir}/{video_file_name}")
-      audio_clip = AudioFileClip(f"{temp_dir}/{audio_file_name}")
-      final_clip = video_clip.set_audio(audio_clip)
+  vid_meta = dict(
+    file=video_path,
+    title=vid_title,
+    description=video_youtube_meta_defaults.get("description")[select_channel],
+    keywords=video_youtube_meta_defaults.get("keywords")[select_channel],
+    privacy_status="public"
+  )
 
-      final_clip.write_videofile(f"{save_dir_path}/vid_{n_vids}.mp4")
-      os.remove(f"{temp_dir}/{video_file_name}")
-      os.remove(f"{temp_dir}/{audio_file_name}")
-    else:
-      print("No audio file!")
-      save_res_file(video_url, f"{save_dir_path}/vid_{n_vids}.mp4")
+  youtube = upload.authenticate_service()
+  upload.init_upload(youtube,vid_meta)
 
-  render_video(videos_dir_path, video_url, audio_url, clip_name)
+  prompt_final_video_del(video_path)
